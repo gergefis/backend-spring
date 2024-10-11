@@ -4,6 +4,8 @@
 -- ------------------------------------------------------
 -- Server version	8.4.2
 
+CREATE SCHEMA IF NOT EXISTS user_management;
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
