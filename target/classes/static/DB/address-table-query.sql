@@ -1,7 +1,0 @@
-CREATE TABLE address (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    address VARCHAR(255) NOT NULL,
-    address_type VARCHAR(20) NOT NULL,
-    user_id BIGINT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
