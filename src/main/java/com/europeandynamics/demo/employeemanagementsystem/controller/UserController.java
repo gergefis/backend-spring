@@ -2,7 +2,6 @@ package com.europeandynamics.demo.employeemanagementsystem.controller;
 
 import com.europeandynamics.demo.employeemanagementsystem.entity.User;
 import com.europeandynamics.demo.employeemanagementsystem.exception.UserNotFoundException;
-import com.europeandynamics.demo.employeemanagementsystem.repository.UserRepository;
 import com.europeandynamics.demo.employeemanagementsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,15 +35,12 @@ public class UserController {
 
 	@Autowired
 	private final UserService userService;
-	@Autowired
-	private final UserRepository userRepository;
 
 	private Map<String, String> response = new HashMap<>();
 	private Map<String, Object> responseObject = new HashMap<>();
 
-	public UserController(UserService userService, UserRepository userRepository) {
+	public UserController(UserService userService) {
 		this.userService = userService;
-		this.userRepository = userRepository;
 	}
 
 	/**
@@ -86,10 +82,10 @@ public class UserController {
 	 */
 	@RequestMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
-
-		ResponseEntity<User> theUser = userService.findById(userId).map(user -> ResponseEntity.ok(user)) //ResponseEntity::ok
-				.orElse(ResponseEntity.notFound().build());
-		return theUser;
+			ResponseEntity<User> theUser = userService.findById(userId)
+					.map(user -> ResponseEntity.ok(user)) //ResponseEntity::ok
+					.orElseThrow(() -> new UserNotFoundException("The user does not exist."));
+			return  theUser;
 	}
 
 	/**
