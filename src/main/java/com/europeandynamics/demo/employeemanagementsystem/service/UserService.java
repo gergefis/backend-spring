@@ -86,6 +86,16 @@ public class UserService {
 		}
 	}
 
+	@Transactional
+	public void updateUser(User theUser) throws Exception {
+
+		for (Addresses address : theUser.getAddresses())
+			address.setUser(theUser);
+
+		 userRepository.save(theUser);
+
+	}
+
 	/**
 	 * Checks if a user exists based on their first and last name.
 	 *
