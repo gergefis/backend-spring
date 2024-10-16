@@ -82,10 +82,9 @@ public class UserController {
 	 */
 	@RequestMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
-			ResponseEntity<User> theUser = userService.findById(userId)
+		return userService.findById(userId)
 					.map(user -> ResponseEntity.ok(user)) //ResponseEntity::ok
 					.orElseThrow(() -> new UserNotFoundException("The user does not exist."));
-			return  theUser;
 	}
 
 	/**
@@ -111,6 +110,12 @@ public class UserController {
 			responseObject.put("message", e.getMessage());
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseObject);
 		}
+	}
+
+	@PutMapping("/updateUser")
+	public void updateEmployee(@RequestBody User theUser) throws Exception {
+
+		userService.updateUser(theUser);
 	}
 
 	/**
