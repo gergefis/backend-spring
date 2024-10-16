@@ -8,22 +8,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+
 @Configuration
-public class UserConfig {
+public class UserSecurityConfig {
 
+//	add support for JDBC
 	@Bean
-	public InMemoryUserDetailsManager userDetailsManager () {
+	public UserDetailsManager userDetailsManager(DataSource dataSource) {
 
-		UserDetails dimitris = User.builder()
-				.username("dimitris")
-				.password("{noop}100200300")
-				.roles("MANAGER","ADMIN") //EMPLOYEE, MANAGER
-				.build();
-
-		return new InMemoryUserDetailsManager(dimitris);
+		JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+		jdbcUserDetailsManager.setUsersByUsernameQuery("select username, password, active from members where username=?");
+		jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("select username, role from roles where username=?");
+		return jdbcUserDetailsManager;
 	}
+
 @Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(configurer ->
@@ -31,7 +34,7 @@ public class UserConfig {
 //						requestMatchers(HttpMethod.GET, "/").hasRole("USER") //TODO to Sign Up page
 						requestMatchers(HttpMethod.GET, "/api/user/getUsers").hasRole("MANAGER")
 						.requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("MANAGER")
-//						.requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("MANAGER")
+						.requestMatchers(HttpMethod.PUT, "/api/user/**").hasRole("MANAGER") //updateUser
 						.requestMatchers(HttpMethod.POST, "/api/user/registerUser").hasRole("MANAGER")
 						.requestMatchers(HttpMethod.DELETE, "/api/user/deleteUser/{id}").hasRole("ADMIN")
 		);
