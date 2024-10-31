@@ -1,4 +1,4 @@
-package com.europeandynamics.demo.employeemanagementsystem;
+package com.springboot.demo.employeemanagementsystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
